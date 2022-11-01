@@ -41,6 +41,16 @@ public class DoctorView {
 
         // buttons
         logoutPersonButton.setText("Logout");
+        logoutPersonButton.addActionListener(e -> {
+            JFrame jFrame = new JFrame("Hospital Management System");
+            jFrame.setContentPane(new LoginView(jFrame).getMainPanel());
+            jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            jFrame.setLocationRelativeTo(null);
+            jFrame.pack();
+            jFrame.setVisible(true);
+            // close the current window
+            SwingUtilities.getWindowAncestor(doctorViewMainPanel).dispose();
+        });
         editDoctorButton.setText("Edit Profile");
 
         // upcoming appointments
