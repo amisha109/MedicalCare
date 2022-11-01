@@ -75,8 +75,15 @@ public class LoginView {
             doctorFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             doctorFrame.pack();
             doctorFrame.setVisible(true);
+            currentJframe.dispose();
         } else if (type == UserTypes.PATIENT) {
-//            currentJframe.setContentPane(new PatientView(userId).getMainPanel());
+            JFrame patientFrame = new JFrame("Patient");
+            patientFrame.setContentPane(new PatientView(db.getPatient(userId)).getMainPanel());
+            patientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            patientFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            patientFrame.pack();
+            patientFrame.setVisible(true);
+            currentJframe.dispose();
         }
     }
 

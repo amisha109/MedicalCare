@@ -30,7 +30,7 @@ public class AddAppointmentDialog extends JDialog {
     private JLabel appointmentReasonLabel;
     private JTextField appointmentVitals1Label;
     private JTextField appointmentVitals2Label;
-    private JTextField appointmentVItals3Label;
+    private JTextField appointmentVitals3Label;
     private JLabel appointmentDiagnosis;
     private JLabel appointmentTreatment;
     private JComboBox<String> personCommunityComboBox;
@@ -118,7 +118,7 @@ public class AddAppointmentDialog extends JDialog {
         if (isUser) {
             appointmentVitals1Label.setEnabled(false);
             appointmentVitals2Label.setEnabled(false);
-            appointmentVItals3Label.setEnabled(false);
+            appointmentVitals3Label.setEnabled(false);
             appointmentVital1textField.setEnabled(false);
             appointmentVital2TextField.setEnabled(false);
             appointmentVital3TextField.setEnabled(false);
@@ -215,7 +215,7 @@ public class AddAppointmentDialog extends JDialog {
         if (isUser) {
             appointmentVitals1Label.setEnabled(false);
             appointmentVitals2Label.setEnabled(false);
-            appointmentVItals3Label.setEnabled(false);
+            appointmentVitals3Label.setEnabled(false);
             appointmentVital1textField.setEnabled(false);
             appointmentVital2TextField.setEnabled(false);
             appointmentVital3TextField.setEnabled(false);
@@ -258,7 +258,7 @@ public class AddAppointmentDialog extends JDialog {
                     appointmentVital2TextField.setText(vitals[i].split(":")[1]);
                 }
                 case 2 -> {
-                    appointmentVItals3Label.setText(vitals[i].split(":")[0]);
+                    appointmentVitals3Label.setText(vitals[i].split(":")[0]);
                     appointmentVital3TextField.setText(vitals[i].split(":")[1]);
                 }
             }
@@ -287,7 +287,7 @@ public class AddAppointmentDialog extends JDialog {
         personCommunityComboBox.setEnabled(false);
         personSsnComboBox.setSelectedItem(patient.getSsNumber());
         personSsnComboBox.setEnabled(false);
-        doctorCommunityComboBox.setSelectedItem(new Database().getCommunity(doctor.getHospitalId()).getName());
+        doctorCommunityComboBox.setSelectedItem(new Database().getCommunity(new Database().getHospital(doctor.getHospitalId()).getCommunityId()).getName());
         doctorCommunityComboBox.setEnabled(false);
         doctorHospitalComboBox.setSelectedItem(new Database().getHospital(doctor.getHospitalId()).getName());
         doctorHospitalComboBox.setEnabled(false);
@@ -325,7 +325,7 @@ public class AddAppointmentDialog extends JDialog {
         HashMap<String, String> vitals = new HashMap<>();
         vitals.put(appointmentVitals1Label.getText(), appointmentVital1textField.getText());
         vitals.put(appointmentVitals2Label.getText(), appointmentVital2TextField.getText());
-        vitals.put(appointmentVItals3Label.getText(), appointmentVital3TextField.getText());
+        vitals.put(appointmentVitals3Label.getText(), appointmentVital3TextField.getText());
         if (new Database().getPatient(personSsn) == null) {
             Person person = new Database().getPerson(personSsn);
             EditPatientDialog editPatientDialog = new EditPatientDialog(person);
@@ -356,8 +356,7 @@ public class AddAppointmentDialog extends JDialog {
         int hospitalId = new Database().getAllHospitals().stream().filter(hospital -> hospital.getName().equals(hospitalName) && hospital.getCommunityId() == communityId).findFirst().get().getId();
         // get doctor id
         int doctorId = new Database().getAllDoctors().stream().filter(doctor -> doctor.getName().equals(doctorName) && doctor.getHospitalId() == hospitalId).findFirst().get().getId();
-        String appointmentDate = appointmentDateValueChooser.getDate().toString();
-        LocalDate date = LocalDate.parse(appointmentDate);
+        LocalDate date = appointmentDateValueChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String appointmentTime = (String) appointmentTimeComboBox.getSelectedItem();
         if (appointmentTime == null) {
             JOptionPane.showMessageDialog(null, "Please select a time");
@@ -371,7 +370,7 @@ public class AddAppointmentDialog extends JDialog {
         HashMap<String, String> vitals = new HashMap<>();
         vitals.put(appointmentVitals1Label.getText(), appointmentVital1textField.getText());
         vitals.put(appointmentVitals2Label.getText(), appointmentVital2TextField.getText());
-        vitals.put(appointmentVItals3Label.getText(), appointmentVital3TextField.getText());
+        vitals.put(appointmentVitals3Label.getText(), appointmentVital3TextField.getText());
         if (new Database().getPatient(personSsn) == null) {
             Person person = new Database().getPerson(personSsn);
             EditPatientDialog editPatientDialog = new EditPatientDialog(person);

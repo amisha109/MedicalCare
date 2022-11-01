@@ -20,6 +20,7 @@ public class EditPatientDialog extends JDialog {
     private JLabel editPatientEmailKeyLabel;
     private JLabel editPatientNameKeyLabel;
     private JLabel editPatientIdKeyLabel;
+    private boolean okButtonPressed = false;
 
     public EditPatientDialog(Person person) {
         setContentPane(contentPane);
@@ -119,12 +120,16 @@ public class EditPatientDialog extends JDialog {
 
         // update database
         new Database().updatePatient(patient);
-
+        okButtonPressed = true;
         dispose();
     }
 
     private void onCancel() {
         // add your code here if necessary
         dispose();
+    }
+
+    public boolean isOkButtonPressed() {
+        return okButtonPressed;
     }
 }

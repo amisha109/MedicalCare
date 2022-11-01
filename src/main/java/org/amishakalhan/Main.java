@@ -14,10 +14,21 @@ public class Main {
             jFrame.setLocationRelativeTo(null);
             jFrame.pack();
             jFrame.setVisible(true);
+            setupGlobalExceptionHandling();
         } catch (Exception e) {
             // create a dialog to show the error
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+    }
+
+    public static void setupGlobalExceptionHandling() {
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> handleException(e));
+    }
+
+    public static void handleException(Throwable e) {
+        // create a dialog to show the error
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
     }
 }

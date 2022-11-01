@@ -13,7 +13,6 @@ public class SysAdminView {
     private JPanel sysAdminViewMainPanel;
     private JPanel sysAdminViewHeadingPanel;
     private JLabel welcomeLabel;
-    private JButton editSysAdminButton;
     private JButton logoutSysAdminButton;
     private JScrollPane doctorsScrollPane;
     private JPanel findDoctorsPanel;

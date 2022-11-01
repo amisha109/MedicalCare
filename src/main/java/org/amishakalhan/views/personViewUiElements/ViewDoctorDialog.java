@@ -1,9 +1,7 @@
 package org.amishakalhan.views.personViewUiElements;
 
-import org.amishakalhan.Community;
-import org.amishakalhan.Database;
-import org.amishakalhan.Doctor;
-import org.amishakalhan.Hospital;
+import org.amishakalhan.*;
+import org.amishakalhan.views.sysAdminViewUiElements.AddAppointmentDialog;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -71,11 +69,64 @@ public class ViewDoctorDialog extends JDialog {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    public ViewDoctorDialog(Patient patient, Doctor doctor) {
+        Database db = new Database();
+        setContentPane(contentPane);
+        setModal(true);
+        getRootPane().setDefaultButton(buttonOK);
+
+        // heading
+        doctorNameValue.setText(doctor.getName());
+
+        // labels
+        doctorIdLabel.setText("Doctor ID: ");
+        doctorSpecializationLabel.setText("Specialization: ");
+        hospitalLabel.setText("Hospital: ");
+        hospitalLocationLabel.setText("Hospital Location: ");
+        hoursAvailableLabel.setText("Hours Available: ");
+        offDayLabel.setText("Off Day: ");
+
+        // values
+        doctorIdValue.setText(String.valueOf(doctor.getId()));
+        doctorSpecializationValue.setText(doctor.getSpecialization());
+        Hospital hospital = db.getHospital(doctor.getHospitalId());
+        hospitalValue.setText(hospital.getName());
+        Community community = db.getCommunity(hospital.getCommunityId());
+        String location = hospital.getLocation() + ", " + community.getName() + ", " + community.getState() + " - " + community.getZipCode();
+        hospitalLocationValue.setText(location);
+        hoursAvailableValue.setText(doctor.getStartTime().toString() + " - " + doctor.getEndTime().toString());
+        offDayValue.setText(doctor.getWeeklyOffDay().toString());
+
+        // buttons
+        buttonOK.setText("Schedule Appointment");
+        buttonOK.addActionListener(e -> onOK(patient, doctor));
+        buttonCancel.addActionListener(e -> onCancel());
+
+        // call onCancel() when cross is clicked
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                onCancel();
+            }
+        });
+
+        // call onCancel() on ESCAPE
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    }
+
     private void onOK(Doctor doctor) {
         // add your code here
         EnterSsnDialog enterSsnDialog = new EnterSsnDialog(doctor);
         enterSsnDialog.pack();
         enterSsnDialog.setVisible(true);
+        dispose();
+    }
+
+    private void onOK(Patient patient, Doctor doctor) {
+        // add your code here
+        AddAppointmentDialog addAppointmentDialog = new AddAppointmentDialog(patient, doctor, true);
+        addAppointmentDialog.pack();
+        addAppointmentDialog.setVisible(true);
         dispose();
     }
 

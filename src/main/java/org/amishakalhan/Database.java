@@ -227,9 +227,13 @@ public class Database {
 
     public ArrayList<Doctor> getDoctors(String search) {
         ArrayList<Doctor> doctors = getAllDoctors();
+        search = search.toLowerCase();
         ArrayList<Doctor> results = new ArrayList<>();
         for (Doctor doctor : doctors) {
-            if (doctor.getName().contains(search) || doctor.getSpecialization().contains(search)) {
+            String hospitalName = getHospital(doctor.getHospitalId()).getName().toLowerCase();
+            String docName = doctor.getName().toLowerCase();
+            String speciality = doctor.getSpecialization().toLowerCase();
+            if (hospitalName.contains(search) || docName.contains(search) || speciality.contains(search)) {
                 results.add(doctor);
             }
         }

@@ -16,8 +16,6 @@ public class PatientView {
     private JButton logoutPatientButton;
     private JLabel communitySelectLabel;
     private JComboBox<String> communitySelectComboBox;
-    private JButton editDetailsButton;
-    private JButton editLoginButton;
     private JPanel findDoctorsTopPanel;
     private JLabel findDoctorsLabel;
     private JPanel findDoctorsSearchPanel;
@@ -36,9 +34,11 @@ public class PatientView {
     private JLabel pastAppointmentsLabel;
     private JPanel pastAppointmentsPanel;
     private final Database db;
+    private final Patient patient;
 
     public PatientView(Patient patient) {
         db = new Database();
+        this.patient = patient;
         welcomeLabel.setText("Welcome, Find doctors at your location");
         communitySelectLabel.setText("Select Community");
         // populate the community select combo box
@@ -56,7 +56,7 @@ public class PatientView {
             jFrame.pack();
             jFrame.setVisible(true);
             // close the current window
-            ((JFrame) SwingUtilities.getWindowAncestor(mainPanel)).dispose();
+            SwingUtilities.getWindowAncestor(mainPanel).dispose();
         });
 
         findDoctorsLabel.setText("Find Doctors");
@@ -91,6 +91,21 @@ public class PatientView {
         createUpcomingAppointmentBlocks(patient);
         createPastAppointmentBlocks(patient);
 
+        // add a trigger to refresh the appointment blocks on mouse move
+        upcomingAppointmentsPanel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                createUpcomingAppointmentBlocks(patient);
+                createPastAppointmentBlocks(patient);
+            }
+        });
+
+        pastAppointmentsPanel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                createUpcomingAppointmentBlocks(patient);
+                createPastAppointmentBlocks(patient);
+            }
+        });
+
     }
 
     private void createDoctorBlocks(int communityId) {
@@ -110,7 +125,7 @@ public class PatientView {
         }
         findDoctorsPanel.setLayout(new GridLayout(0, 3));
         for (Doctor doctor : doctors) {
-            PersonDoctorBlock doctorBlock = new PersonDoctorBlock(doctor);
+            PersonDoctorBlock doctorBlock = new PersonDoctorBlock(patient, doctor);
             findDoctorsPanel.add(doctorBlock.getMainPanel());
         }
         findDoctorsPanel.revalidate();
@@ -134,7 +149,7 @@ public class PatientView {
         }
         findDoctorsPanel.setLayout(new GridLayout(0, 3));
         for (Doctor doctor : doctors) {
-            PersonDoctorBlock doctorBlock = new PersonDoctorBlock(doctor);
+            PersonDoctorBlock doctorBlock = new PersonDoctorBlock(patient, doctor);
             findDoctorsPanel.add(doctorBlock.getMainPanel());
         }
         findDoctorsPanel.revalidate();
@@ -161,6 +176,7 @@ public class PatientView {
             upcomingAppointmentsPanel.setLayout(new GridLayout());
             upcomingAppointmentsPanel.add(noUpcomingAppointmentsLabel);
         } else {
+            upcomingAppointmentsPanel.setLayout(new GridLayout(0, 3));
             for (Appointment appointment : upcomingAppointments) {
                 Doctor doctor = db.getDoctor(appointment.getDoctorId());
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
@@ -201,13 +217,14 @@ public class PatientView {
             pastAppointmentsPanel.setLayout(new GridLayout());
             pastAppointmentsPanel.add(noPastAppointmentsLabel);
         } else {
+            pastAppointmentsPanel.setLayout(new GridLayout(0, 3));
             for (Appointment appointment : pastAppointments) {
                 Doctor doctor = db.getDoctor(appointment.getDoctorId());
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
                 pastAppointmentsPanel.add(appointmentBlock.getMainPanel());
                 appointmentBlock.getDeleteButton().setVisible(false);
                 appointmentBlock.getEditButton().addActionListener(e -> {
-                    AddAppointmentDialog editAppointmentDialog = new AddAppointmentDialog(appointment, false);
+                    AddAppointmentDialog editAppointmentDialog = new AddAppointmentDialog(appointment, true);
                     editAppointmentDialog.pack();
                     editAppointmentDialog.setVisible(true);
                     createUpcomingAppointmentBlocks(patient);

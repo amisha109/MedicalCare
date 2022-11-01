@@ -2,6 +2,7 @@ package org.amishakalhan.views.personViewUiElements;
 
 import org.amishakalhan.Database;
 import org.amishakalhan.Doctor;
+import org.amishakalhan.Patient;
 
 import javax.swing.*;
 
@@ -32,6 +33,24 @@ public class PersonDoctorBlock {
 
         viewBookDoctorButton.addActionListener(e -> {
             ViewDoctorDialog viewDoctorDialog = new ViewDoctorDialog(doctor);
+            viewDoctorDialog.pack();
+            viewDoctorDialog.setVisible(true);
+        });
+    }
+
+    public PersonDoctorBlock(Patient patient, Doctor doctor) {
+        Database db = new Database();
+        doctorNameLabel.setText(doctor.getName());
+        doctorInfoSpecializationKeyLabel.setText("Specialization");
+        doctorInfoSpecializationValueLabel.setText(doctor.getSpecialization());
+        doctorInfoLocationKeyLabel.setText("Where to find");
+        doctorInfoLocationValueLabel.setText(db.getHospital(doctor.getHospitalId()).getName());
+        doctorInfoHoursAvailableKeyLabel.setText("Hours available");
+        doctorInfoHoursAvailableValueLabel.setText(doctor.getStartTime().toString() + " - " + doctor.getEndTime().toString());
+        viewBookDoctorButton.setText("View Details/Schedule Appointment");
+
+        viewBookDoctorButton.addActionListener(e -> {
+            ViewDoctorDialog viewDoctorDialog = new ViewDoctorDialog(patient, doctor);
             viewDoctorDialog.pack();
             viewDoctorDialog.setVisible(true);
         });

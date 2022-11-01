@@ -1,5 +1,6 @@
 package org.amishakalhan.views;
 
+import com.google.gson.Gson;
 import org.amishakalhan.Appointment;
 import org.amishakalhan.Database;
 import org.amishakalhan.Doctor;
@@ -18,7 +19,6 @@ public class DoctorView {
     private JPanel doctorViewHeadingPanel;
     private JLabel welcomeLabel;
     private JButton logoutPersonButton;
-    private JButton editDoctorButton;
     private JLabel upcomingAppointmentsLabel;
     private JPanel findUpcomingAppointmentsPanel;
     private JPanel upcomingAppointmentsPanel;
@@ -51,7 +51,6 @@ public class DoctorView {
             // close the current window
             SwingUtilities.getWindowAncestor(doctorViewMainPanel).dispose();
         });
-        editDoctorButton.setText("Edit Profile");
 
         // upcoming appointments
         createUpcomingAppointmentBlocks(doctor);
@@ -79,6 +78,7 @@ public class DoctorView {
             findUpcomingAppointmentsPanel.setLayout(new GridLayout());
             findUpcomingAppointmentsPanel.add(noUpcomingAppointmentsLabel);
         } else {
+            findUpcomingAppointmentsPanel.setLayout(new GridLayout(0, 3));
             for (Appointment appointment : upcomingAppointments) {
                 Patient patient = db.getPatient(appointment.getPatientId());
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
@@ -119,6 +119,7 @@ public class DoctorView {
             findPastAppointments.setLayout(new GridLayout());
             findPastAppointments.add(noPastAppointmentsLabel);
         } else {
+            findPastAppointments.setLayout(new GridLayout(0, 3));
             for (Appointment appointment : pastAppointments) {
                 Patient patient = db.getPatient(appointment.getPatientId());
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
@@ -147,7 +148,15 @@ public class DoctorView {
         ArrayList<Patient> doctorPatients = new ArrayList<>();
         for (Appointment appointment : appointments) {
             Patient patient = db.getPatient(appointment.getPatientId());
-            if (!doctorPatients.contains(patient)) {
+            // check if patient is already in the list based on id
+            boolean patientExists = false;
+            for (Patient doctorPatient : doctorPatients) {
+                if (doctorPatient.getId() == patient.getId()) {
+                    patientExists = true;
+                    break;
+                }
+            }
+            if (!patientExists) {
                 doctorPatients.add(patient);
             }
         }
@@ -156,6 +165,7 @@ public class DoctorView {
             viewPatientsPanel.setLayout(new GridLayout());
             viewPatientsPanel.add(noPatientsLabel);
         } else {
+            viewPatientsPanel.setLayout(new GridLayout(0, 3));
             for (Patient patient : doctorPatients) {
                 DoctorPatientBlock patientBlock = new DoctorPatientBlock(doctor, patient);
                 viewPatientsPanel.add(patientBlock.getMainPanel());
