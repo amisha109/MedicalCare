@@ -74,8 +74,17 @@ public class SysAdminView {
         db = new Database();
 
         welcomeLabel.setText("Welcome, System Admin");
-        editSysAdminButton.setText("Edit your details");
         logoutSysAdminButton.setText("Logout");
+        logoutSysAdminButton.addActionListener(e -> {
+            JFrame jFrame = new JFrame("Hospital Management System");
+            jFrame.setContentPane(new LoginView(jFrame).getMainPanel());
+            jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            jFrame.setLocationRelativeTo(null);
+            jFrame.pack();
+            jFrame.setVisible(true);
+            // close the current window
+            ((JFrame) SwingUtilities.getWindowAncestor(sysAdminViewMainPanel)).dispose();
+        });
 
         // communities panel
         findCommunitiesLabel.setText("Communities");
