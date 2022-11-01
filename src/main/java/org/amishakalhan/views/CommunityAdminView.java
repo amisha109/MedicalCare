@@ -58,6 +58,16 @@ public class CommunityAdminView {
             welcomeLabel.setText("Welcome, " + communityAdmin.getName() + "(" + community.getName() + ")");
         });
         logoutCommunityAdminButton.setText("Logout");
+        logoutCommunityAdminButton.addActionListener(e -> {
+            JFrame jFrame = new JFrame("Hospital Management System");
+            jFrame.setContentPane(new LoginView(jFrame).getMainPanel());
+            jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            jFrame.setLocationRelativeTo(null);
+            jFrame.pack();
+            jFrame.setVisible(true);
+            // close the current window
+            SwingUtilities.getWindowAncestor(communityAdminViewMainPanel).dispose();
+        });
         editCommunity.setText("Edit Community");
         editCommunity.addActionListener(e -> {
             EditCommunityDialog dialog = new EditCommunityDialog(community);
