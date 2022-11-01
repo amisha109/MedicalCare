@@ -1,4 +1,4 @@
-# Medical Care
+# Medical Caree
 __Assignment 2__
 
 Name: __Amisha Kalhan__  
