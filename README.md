@@ -1,4 +1,4 @@
-# Hospital Management System
+# Medical Care
 __Assignment 2__
 
 Name: __Amisha Kalhan__  
